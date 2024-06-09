@@ -18,10 +18,14 @@ class Cars_and_parts extends Controller
 
     public function saveCar(Request $request)
     {
+
         $car = new Car();
         $car->name = $request->name;
         $car->registration_number = $request->registrtion_number;
         $car->is_registered = $request->is_registered;
+        $car->save();
+
+
 
 
     }
