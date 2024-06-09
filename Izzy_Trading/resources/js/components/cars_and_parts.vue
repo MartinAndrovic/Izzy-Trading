@@ -69,10 +69,19 @@
                         -
                     </td>
                     <td v-else class="border-2">{{ car.registration_number }}</td>
-                    <td v-if="car.is_registered" class="border-2"> yes</td>
-                    <td v-else class="border-2"> no</td>
+
+                        <td v-if="car.disabled" class="border-2"> yes</td>
+
+
+
+                    <div>
+
+                    </div>
+
+
+
                     <td class="border-2 td_buttons">
-                        <button @click="edit(car.id)"> {{car.disabled ? 'edit' : 'save'}} </button>
+                        <button @click="edit(car)"> {{car.disabled ? 'edit' : 'save'}} </button>
                         <button> delete</button>
                     </td>
 
@@ -154,28 +163,39 @@ export default {
         },
 
 
-        edit(id) {
+        edit(car) {
 
 
+            if(car.disabled){
+                for (let i = 0; i < this.cars.length; i++) {
 
-            for (let i = 0; i < this.cars.length; i++) {
+                    if (this.cars[i].id == car.id) {
 
-                if (this.cars[i].id == id) {
+                        this.cars[i].disabled=false;
 
-                    this.cars[i].disabled=false;
+                    }
 
                 }
+            }
+            else{
+
+
+
+
+                axios.post('cars-and-parts/update', car)
+                    .then(car.disabled=!car.disabled)
+                    .catch(error => console.log(error))
+
+
+
 
             }
 
+
+
         },
 
-        updateCar(){
-            axios.post('cars-and-parts/update',this.form)
-                .then
-                .catch(error => console.log(error))
 
-        }
 
 
     },

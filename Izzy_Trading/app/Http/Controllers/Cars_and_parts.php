@@ -25,7 +25,21 @@ class Cars_and_parts extends Controller
         $car->is_registered = $request->is_registered;
         $car->save();
 
+    }
 
+    public function updateCar(Request $request)
+    {
+
+
+        Car::find($request->id)->update([
+            'name' => $request->name,
+            'registration_number' => $request->car_id,
+            'is_registered' => $request->serialnumber
+        ]);
+
+
+
+        return $request->name;
 
 
     }

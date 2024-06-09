@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Part extends Model
 {
+
+    protected $fillable = ['name', 'car_id','serialnumber'];
     use HasFactory;
 
     public function car(): BelongsTo
