@@ -9,8 +9,6 @@
     </nav>
 
 
-
-
     <div class="d-flex justify-content-center">
 
         <div v-if="selector == 0" class=" text-center p-2 ">
@@ -63,34 +61,20 @@
                 <tr v-for="car in this.cars">
 
 
-                    <td class="border-2">{{ car.name }}
+                    <td class="border-2">
+                        <input v-model="car.name" :disabled="car.disabled">
 
                     </td>
-                    <td v-if="car.registration_number == null" class="border-2"> </td>
+                    <td v-if="car.registration_number == null" class="border-2">
+                        -
+                    </td>
                     <td v-else class="border-2">{{ car.registration_number }}</td>
                     <td v-if="car.is_registered" class="border-2"> yes</td>
                     <td v-else class="border-2"> no</td>
-                    <td class="border-2">
-                        <button> edit</button>
-                        <button @click="coje(car.name)"> delete</button>
+                    <td class="border-2 td_buttons">
+                        <button @click="edit(car.id)"> {{car.disabled ? 'edit' : 'save'}} </button>
+                        <button> delete</button>
                     </td>
-
-
-                </tr>
-
-                <tr v-for="car in this.cars">
-
-
-
-                        <td> co je</td>
-                        <td> co je</td>
-                        <td> co je</td>
-
-
-
-
-
-
 
 
                 </tr>
@@ -116,13 +100,14 @@ export default {
     data() {
         return {
             cars: [],
-            edit: false,
 
             car_form: {
                 name: '',
                 registration_number: '',
                 is_registered: false
             },
+
+            disabled: [],
 
             selector: '0',
             addCar: false
@@ -135,14 +120,16 @@ export default {
 
         getCars() {
             axios.get('cars-and-parts/cars')
-                .then(response => this.cars = response.data)
+                .then(response => {
+                    this.cars = response.data,
+                        this.setActive(this.cars),
+                        this.setDisabled(this.cars)
+                })
                 .catch(error => console.log(error))
 
 
         },
-        coje(name){
-          alert(name)
-        },
+
 
         saveCar() {
 
@@ -151,6 +138,43 @@ export default {
             axios.post('cars-and-parts/cars', this.car_form)
                 .then(this.getCars, this.addCar = false)
                 .catch(error => console.log(error))
+        },
+
+        setActive(object) {
+            for (let i = 0; i < object.length; i++) {
+                object[i].active = true;
+            }
+        },
+
+        setDisabled(object) {
+            for (let i = 0; i < object.length; i++) {
+                object[i].disabled = true;
+            }
+
+        },
+
+
+        edit(id) {
+
+
+
+            for (let i = 0; i < this.cars.length; i++) {
+
+                if (this.cars[i].id == id) {
+
+                    this.cars[i].disabled=false;
+
+                }
+
+            }
+
+        },
+
+        updateCar(){
+            axios.post('cars-and-parts/update',this.form)
+                .then
+                .catch(error => console.log(error))
+
         }
 
 
@@ -195,7 +219,9 @@ form {
     min-width: 100px;
 }
 
-
+.td_buttons{
+    min-width: 120px;
+}
 
 
 </style>
