@@ -21,7 +21,7 @@ class Cars_and_parts extends Controller
 
         $car = new Car();
         $car->name = $request->name;
-        $car->registration_number = $request->registrtion_number;
+        $car->registration_number = $request->registration_number;
         $car->is_registered = $request->is_registered;
         $car->save();
 
@@ -30,17 +30,17 @@ class Cars_and_parts extends Controller
     public function updateCar(Request $request)
     {
 
-
         Car::find($request->id)->update([
             'name' => $request->name,
-            'registration_number' => $request->car_id,
-            'is_registered' => $request->serialnumber
+            'registration_number' => $request->registration_number,
+            'is_registered' => $request->is_registered
         ]);
 
+    }
 
-
-        return $request->name;
-
+    public function deleteCar(Request $request)
+    {
+        Car::find($request->id)->delete();
 
     }
 }

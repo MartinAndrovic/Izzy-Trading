@@ -21,3 +21,4 @@ Route::get('/', function () {
 Route::get('cars-and-parts/cars',[\App\Http\Controllers\Cars_and_parts::class,'getCars']);
 Route::post('cars-and-parts/cars',[\App\Http\Controllers\Cars_and_parts::class,'saveCar']);
 Route::post('cars-and-parts/update',[\App\Http\Controllers\Cars_and_parts::class,'updateCar']);
+Route::delete('cars-and-parts/delete/{id}',[\App\Http\Controllers\Cars_and_parts::class,'deleteCar']);
