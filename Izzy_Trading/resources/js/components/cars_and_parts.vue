@@ -54,24 +54,35 @@
                 <tr class="border-2 ">
 
                     <th class="border-2"> name</th>
-                    <th class="border-2"> registration number</th>
+                    <th class="border-2"> registration munber</th>
                     <th class="border-2"> is registered</th>
 
                 </tr>
 
                 <tr>
                     <td class="border-2">
-                        <input  class="edit_input" @input="xsearch(inputName, cars,'name')" id="dddmenu" v-model="inputName">
+                        <input class="filter_input" @input="xsearch(inputName, cars,'name')"
+                               v-model="inputName">
 
                     </td>
 
 
                     <td class="border-2">
-                        <input class="edit_input" @input="xsearch(inputRegistrationNumber, cars,'registration_number')" id="dddmenu" v-model="inputRegistrationNumber">
+                        <input class="filter_input"
+                               @input="xsearch(inputRegistrationNumber, cars,'registration_number')"
+                               v-model="inputRegistrationNumber">
                     </td>
 
                     <td class="border-2">
-                        <input class="edit_input" @input="xsearch(inputValue, cars,'is_registered')" id="dddmenu" v-model="inputValue">
+                        <button class="filter_button" @click="xsearch(true,cars,'is_registered')"> registered</button>
+                        <button class="filter_button" @click="xsearch(false,cars,'is_registered')"> unregistered
+                        </button>
+                        <button class="filter_button" @click="setActive(cars)"> all</button>
+                    </td>
+
+                    <td class="border-2 ">
+                        <button class="just-taking-space"> edit</button>
+                        <button class="just-taking-space"> delete</button>
                     </td>
 
 
@@ -84,7 +95,7 @@
                 </tr>
 
 
-                <tr v-else v-show="car.active"  v-for="car in this.cars">
+                <tr v-else v-show="car.active" v-for="car in this.cars">
 
 
                     <td class="border-2">
@@ -95,7 +106,136 @@
                         -
                     </td>
                     <td v-else>
-                        <input v-model="car.registration_number" :disabled="car.disabled" class="edit_input text-center bg-dark">
+                        <input v-model="car.registration_number" :disabled="car.disabled"
+                               class="edit_input text-center bg-dark">
+                    </td>
+
+                    <td v-if="car.disabled" class="border-2"> {{ car.is_registered ? 'yes' : 'no' }}</td>
+
+                    <td v-else>
+                        <label for="is_registered"> yes </label>
+                        <input id="is_registered" type="radio" :value="true" v-model="car.is_registered">
+                        <label for="is_registered"> no </label>
+                        <input id="is_registered" type="radio" :value=false v-model="car.is_registered">
+                    </td>
+
+
+                    <td class="border-2 ">
+                        <button @click="editCar(car)" class="edit"> {{ car.disabled ? 'edit' : 'save' }}</button>
+                        <button @click="deleteCar(car.id)" class="delete"> delete</button>
+                    </td>
+
+
+                </tr>
+
+            </table>
+
+
+        </div>
+
+
+
+
+    <div>
+
+
+        <div v-if="selector == 1" class=" text-center p-2 ">
+
+            <table class="border  border-danger-subtle border-2 my_table">
+
+
+                <tr>
+                    <td colspan="4">
+                        <div><h2 class="text-info">Cars</h2></div>
+                        <button @click="addCar=true" class="float-end add_car "> add a car</button>
+                        <br>
+
+                        <form v-if="addCar==true" @submit.prevent="saveCar">
+
+                            <label for="car_name"> name </label>
+                            <input id="car_name" v-model="car_form.name" required>
+
+                            Is the car registered?
+                            <label for="is_registered"> yes </label>
+                            <input id="is_registered" type="radio" :value=true v-model="car_form.is_registered"
+                                   required>
+                            <label for="is_registered"> no </label>
+                            <input id="is_registered" type="radio" :value=false v-model="car_form.is_registered"
+                                   required>
+
+                            <label for="registration_number"
+                                   :class="car_form.is_registered ? 'reg_number_visible' : 'reg_number_hidden'">
+                                registration number </label>
+                            <input id="registration_number"
+                                   :class="car_form.is_registered ? 'reg_number_visible' : 'reg_number_hidden'"
+                                   v-model="car_form.registration_number" :required="car_form.is_registered">
+
+
+                            <button type="submit"> save</button>
+
+                        </form>
+
+                    </td>
+
+                </tr>
+
+                <tr class="border-2 ">
+
+                    <th class="border-2"> name</th>
+                    <th class="border-2"> registration munber</th>
+                    <th class="border-2"> is registered</th>
+
+                </tr>
+
+                <tr>
+                    <td class="border-2">
+                        <input class="filter_input" @input="xsearch(inputName, cars,'name')"
+                               v-model="inputName">
+
+                    </td>
+
+
+                    <td class="border-2">
+                        <input class="filter_input"
+                               @input="xsearch(inputRegistrationNumber, cars,'registration_number')"
+                               v-model="inputRegistrationNumber">
+                    </td>
+
+                    <td class="border-2">
+                        <button class="filter_button" @click="xsearch(true,cars,'is_registered')"> registered</button>
+                        <button class="filter_button" @click="xsearch(false,cars,'is_registered')"> unregistered
+                        </button>
+                        <button class="filter_button" @click="setActive(cars)"> all</button>
+                    </td>
+
+                    <td class="border-2 ">
+                        <button class="just-taking-space"> edit</button>
+                        <button class="just-taking-space"> delete</button>
+                    </td>
+
+
+                </tr>
+
+                <tr v-if="cars.length == 0">
+                    <td></td>
+                    <td> no cars yet</td>
+                    <td></td>
+                </tr>
+
+
+                <tr v-else v-show="car.active" v-for="car in this.cars">
+
+
+                    <td class="border-2">
+                        <input v-model="car.name" :disabled="car.disabled" class="edit_input text-center bg-dark ">
+
+                    </td>
+                    <td v-if="!car.is_registered" class="border-2">
+                        -
+                    </td>
+                    <td v-else>
+                        <input v-model="car.registration_number" :disabled="car.disabled"
+                               class="edit_input text-center bg-dark">
                     </td>
 
                     <td v-if="car.disabled" class="border-2"> {{ car.is_registered ? 'yes' : 'no' }}</td>
@@ -124,7 +264,7 @@
 
     </div>
 
-    <div>
+
 
 
     </div>
@@ -237,23 +377,35 @@ export default {
         },
 
 
-        xsearch(key,object,column) {
+        xsearch(key, object, column) {
 
 
+            if (column == 'is_registered') {
 
-            if (key === "") {
+                this.setActive(this.cars)
                 for (let i = 0; i < object.length; i++) {
-                    object[i].active = true;
+                    if ((object[i][column] != key)) {
+                        object[i].active = false
+                    }
+                }
+            } else {
+
+
+                if (key === "") {
+                    for (let i = 0; i < object.length; i++) {
+                        object[i].active = true;
+                    }
+
                 }
 
-            }
+                let reg = new RegExp(key, "i")
 
-            let reg = new RegExp(key, "i")
-
-            for (let i = 0; i < object.length; i++) {
-                if (!reg.test(object[i][column])) {
-                    object[i].active = false
+                for (let i = 0; i < object.length; i++) {
+                    if (!reg.test(object[i][column])) {
+                        object[i].active = false
+                    }
                 }
+
             }
 
         },
@@ -320,7 +472,7 @@ form {
 
 }
 
-.edit_input{
+.edit_input {
     color: burlywood;
     width: 50%;
     padding: 1px;
@@ -328,25 +480,39 @@ form {
 
 }
 
-.add_car{
+.filter_input {
+    font-size: 0.9em;
+    width: 50%;
+}
+
+.filter_button {
+    font-size: 0.8em;
+}
+
+.add_car {
     background-color: #146c43;
     font-size: 0.9em;
 }
- .nav_button{
-     background-color: inherit;
-     margin-left: 1em;
 
- }
+.nav_button {
+    background-color: inherit;
+    margin-left: 1em;
 
- .nav_button:hover{
-     background-color: #6c757d;
- }
+}
 
-th{
-     color: #ef4444;
- }
+.nav_button:hover {
+    background-color: #6c757d;
+}
 
-td{
+th {
+    color: #ef4444;
+}
+
+td {
     color: burlywood;
+}
+
+.just-taking-space {
+
 }
 </style>
